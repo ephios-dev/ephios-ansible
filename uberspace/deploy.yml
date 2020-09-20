@@ -1,0 +1,144 @@
+---
+- hosts: servers
+  vars:
+    install_root: ~/
+    project_repo: https://github.com/ephios-dev/ephios.git
+  gather_facts: false
+
+  tasks:
+    - name: create django secret and set it as fact
+      block:
+      - name: create django_secret file
+        shell: "openssl rand -base64 32 > {{ install_root }}.django-secret"
+        args:
+          creates: "{{ install_root }}.django-secret"
+      - name: Read django_secret
+        shell: "cat {{ install_root }}.django-secret"
+        register: cmd_output
+      - name: Set django_secret as fact
+        set_fact:
+          django_secret: "{{ cmd_output.stdout }}"
+    - name: set up uberspace
+      block:
+      - name: uberspace add domain
+        shell: uberspace web domain add {{ domain }}
+        ignore_errors: yes  # if domain is added already, there is a non-zero exit code
+      - name: uberspace set application web backend
+        shell: uberspace web backend set {{ domain }}/ --http --port 8000
+      - name: uberspace set static web backend
+        shell: uberspace web backend set {{ domain }}/static/ --apache
+
+        # as we don't have private media files, we can serve them via apache
+      - name: uberspace set media web backend
+        shell: uberspace web backend set {{ domain }}/media/ --apache
+
+    - name: set database password as fact
+      block:
+      - name: Read Database password
+        shell: my_print_defaults client | grep password | cut -d "=" -f 2
+        register: cmd_output
+      - name: Set database password as fact
+        set_fact:
+          db_password: "{{ cmd_output.stdout }}"
+
+    - name: install and set up uwsgi
+      block:
+      - name: install uwsgi via pip
+        pip:
+          name: uwsgi
+          executable: /usr/bin/pip3.8
+          extra_args: --user
+        notify:
+        - restart uwsgi
+      - name: copy uwsgi config
+        template: src=files/uwsgi.j2 dest=~/etc/services.d/uwsgi.ini
+        notify:
+        - restart uwsgi
+      - name: create uwsgi apps-enabled directory
+        file:
+          path: ~/uwsgi/apps-enabled
+          state: directory
+      - name: create uwsgi err.log file
+        file:
+          path: ~/uwsgi/err.log
+          state: touch
+      - name: create uwsgi out.log file
+        file:
+          path: ~/uwsgi/out.log
+          state: touch
+
+    - name: Clone/pull project repo
+      git: 
+        repo: "{{ project_repo }}"
+        dest: "{{ install_root }}ephios"
+        accept_hostkey: yes
+        version: "fixforprod"
+      notify:
+      - restart uwsgi
+
+    - name: install requirements
+      block:
+      - name: install poetry
+        pip:
+          name: poetry
+          executable: /usr/bin/pip3.8
+          extra_args: --user
+        notify:
+        - restart uwsgi
+      - name: install requirements
+        shell: python3.8 -m poetry install -n --no-dev
+        args:
+          chdir: "{{ install_root }}ephios"
+        notify:
+        - restart uwsgi
+
+    - name: copy ephios env
+      template:
+        src: "files/.env.j2"
+        dest: "{{ install_root }}ephios/.env"
+      notify:
+      - restart uwsgi
+
+    - name: Make sure database exists
+      mysql_db:
+        name: "{{ ansible_user }}_ephios"
+        state: present
+
+    - name: django migrate
+      shell: python3.8 -m poetry run {{ install_root }}ephios/manage.py migrate
+      args:
+        chdir: "{{ install_root }}ephios"
+      notify:
+      - restart uwsgi
+
+    - name: django collectstatic
+      shell: python3.8 -m poetry run {{ install_root }}ephios/manage.py collectstatic --no-input
+      args:
+        chdir: "{{ install_root }}ephios"
+      notify:
+      - restart uwsgi
+
+
+    - name: set venv as fact
+      block:
+      - name: Read venv path
+        shell: python3.8 -m poetry env info -p
+        args:
+          chdir: "{{ install_root }}ephios"
+        register: cmd_output
+      - name: Set venv path as fact
+        set_fact:
+          venv_path: "{{ cmd_output.stdout }}"
+
+    - name: copy ephios uwsgi config
+      template:
+        src: "files/ephios.ini.j2"
+        dest: "~/uwsgi/apps-enabled/ephios.ini"
+      notify:
+      - restart uwsgi
+
+  handlers: 
+    - name: restart uwsgi
+      supervisorctl:
+        name: uwsgi
+        state: restarted
