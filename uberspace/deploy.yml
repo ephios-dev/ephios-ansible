@@ -72,7 +72,6 @@
         repo: "{{ project_repo }}"
         dest: "{{ install_root }}ephios"
         accept_hostkey: yes
-        version: "fixforprod"
       notify:
       - restart uwsgi
 
