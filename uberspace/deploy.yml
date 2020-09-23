@@ -90,6 +90,12 @@
           chdir: "{{ install_root }}ephios"
         notify:
         - restart uwsgi
+      - name: install database driver
+        shell: python3.8 -m poetry run pip install mysqlclient
+        args:
+          chdir: "{{ install_root }}ephios"
+        notify:
+        - restart uwsgi
 
     - name: copy ephios env
       template:
