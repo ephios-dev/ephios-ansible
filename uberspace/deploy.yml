@@ -123,6 +123,12 @@
       notify:
       - restart uwsgi
 
+    - name: django compilemessages
+      shell: python3.8 -m poetry run {{ install_root }}ephios/manage.py compilemessages
+      args:
+        chdir: "{{ install_root }}ephios"
+      notify:
+      - restart uwsgi
 
     - name: set venv as fact
       block:
