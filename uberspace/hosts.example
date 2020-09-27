@@ -1,0 +1,10 @@
+---
+servers:
+  hosts:
+    thishostdoesnotexist.uberspace.de:
+      ansible_user: theuberspaceusername
+      domain: asubdomain.ephios.de
+      ansible_ssh_private_key_file: ~/path/to/ssh/key
+      smtp_mailbox: noreply
+      admin_email: admin@ephios.de
+

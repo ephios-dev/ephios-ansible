@@ -1,0 +1,36 @@
+[uwsgi]
+base = /home/{{ ansible_user }}/.local/lib/python3.8/site-packages/ephios
+
+http = :8000
+master = true
+wsgi-file = %(base)/wsgi.py
+touch-reload = %(wsgi-file)
+static-map = /static=%(base)/static
+
+app = wsgi
+
+plugin = python
+
+uid = {{ ansible_user }}
+gid = {{ ansible_user }}
+
+
+env = SECRET_KEY={{ django_secret }}
+env = DEBUG=False
+
+env = DATABASE_URL=mysql://{{ ansible_user }}:{{ db_password }}@localhost/{{ ansible_user }}_ephios
+
+env = ALLOWED_HOSTS={{ domain }}
+env = STATIC_URL=/static/
+env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ domain }}/static/
+env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ domain }}/media/
+
+env = SITE_URL=https://{{ domain }}
+
+env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ domain }}:{{ smtp_password }}@{{ inventory_hostname }}:587
+
+env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ domain }}
+env = SERVER_EMAIL={{ smtp_mailbox}}@{{ domain }}
+
+env = ADMINS={{ admin_email }}
+
