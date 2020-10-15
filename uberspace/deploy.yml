@@ -6,6 +6,7 @@
 
   tasks:
     - name: create secrets and set them as fact
+      no_log: true
       block:
       - name: create django_secret file
         shell: "openssl rand -base64 50 | tr -cd '[:alnum:]' > ~/.django-secret"
@@ -17,7 +18,6 @@
       - name: Set django_secret as fact
         set_fact:
           django_secret: "{{ cmd_output.stdout }}"
-
       - name: create smtp_password file
         shell: "openssl rand -base64 30 | tr -cd '[:alnum:]' > ~/.smtp-password"
         args:
@@ -44,22 +44,20 @@
         shell: uberspace web backend set {{ domain }}/media/ --apache
 
     - name: set up uberspace mail
+      no_log: true
       block:
       - name: uberspace add mail domain
         shell: uberspace mail domain add {{ domain }}
         ignore_errors: yes  # if domain is added already, there is a non-zero exit code
-      - name: uberspace add mailbox
-        shell: "uberspace mail user add {{ smtp_mailbox }} -p\"$SMTP_PASSWORD\""
+      -$SMTP_PASSWORD name: uberspace add mailbox
+        shell: "uberspace mail user add {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
         ignore_errors: yes  # if user is added already, there is a non-zero exit code
-        environment:
-          SMTP_PASSWORD: "{{ smtp_password }}"
       - name: uberspace set mail password
-        shell: "uberspace mail user password {{ smtp_mailbox }} -p\"$SMTP_PASSWORD\""
-        environment:
-          SMTP_PASSWORD: "{{ smtp_password }}"
+        shell: "uberspace mail user password {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
 
 
     - name: set database password as fact
+      no_log: true
       block:
       - name: Read Database password
         shell: my_print_defaults client | grep password | cut -d "=" -f 2
