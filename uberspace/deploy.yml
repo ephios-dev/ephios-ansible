@@ -1,12 +1,14 @@
 ---
 - hosts: servers
+  vars:
+    package_name: ephios[mysql]
   gather_facts: false
 
   tasks:
     - name: create secrets and set them as fact
       block:
       - name: create django_secret file
-        shell: "openssl rand -base64 50 |  tr -cd '[:alnum:]' > ~/.django-secret"
+        shell: "openssl rand -base64 50 | tr -cd '[:alnum:]' > ~/.django-secret"
         args:
           creates: "~/.django-secret"
       - name: Read django_secret
@@ -17,7 +19,7 @@
           django_secret: "{{ cmd_output.stdout }}"
 
       - name: create smtp_password file
-        shell: "openssl rand -base64 30 |  tr -cd '[:alnum:]' > ~/.smtp-password"
+        shell: "openssl rand -base64 30 | tr -cd '[:alnum:]' > ~/.smtp-password"
         args:
           creates: "~/.smtp-password"
       - name: Read smtp_password
@@ -47,10 +49,14 @@
         shell: uberspace mail domain add {{ domain }}
         ignore_errors: yes  # if domain is added already, there is a non-zero exit code
       - name: uberspace add mailbox
-        shell: "uberspace mail user add {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
+        shell: "uberspace mail user add {{ smtp_mailbox }} -p\"$SMTP_PASSWORD\""
         ignore_errors: yes  # if user is added already, there is a non-zero exit code
+        environment:
+          SMTP_PASSWORD: "{{ smtp_password }}"
       - name: uberspace set mail password
-        shell: "uberspace mail user password {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
+        shell: "uberspace mail user password {{ smtp_mailbox }} -p\"$SMTP_PASSWORD\""
+        environment:
+          SMTP_PASSWORD: "{{ smtp_password }}"
 
 
     - name: set database password as fact
@@ -97,7 +103,7 @@
 
     - name: install ephios
       pip:
-        name: ephios[mysql]
+        name: "{{ package_name }}"
         state: latest
         executable: /usr/bin/pip3.8
         extra_args: --user
