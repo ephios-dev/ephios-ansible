@@ -49,7 +49,7 @@
       - name: uberspace add mail domain
         shell: uberspace mail domain add {{ domain }}
         ignore_errors: yes  # if domain is added already, there is a non-zero exit code
-      -$SMTP_PASSWORD name: uberspace add mailbox
+      - name: uberspace add mailbox
         shell: "uberspace mail user add {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
         ignore_errors: yes  # if user is added already, there is a non-zero exit code
       - name: uberspace set mail password
