@@ -122,14 +122,14 @@
     - name: django collectstatic
       shell: source ~/ephios.env && python3.8 -m ephios collectstatic --no-input
 
-    - name: django compile i18n javascript
-      shell: source ~/ephios.env && python3.8 -m ephios compilejsi18n
-
     - name: django compilemessages
       shell: source ~/ephios.env && python3.8 -m ephios compilemessages
       notify:
       - restart uwsgi
 
+    - name: django compile i18n javascript
+      shell: source ~/ephios.env && python3.8 -m ephios compilejsi18n
+      
 
     - name: copy ephios uwsgi config
       template:
