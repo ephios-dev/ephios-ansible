@@ -102,7 +102,7 @@
     - name: install ephios
       pip:
         name: "{{ package_name }}"
-        state: "{{ 'present' if ephios_version else 'latest' }}"
+        state: "{{ 'present' if ephios_version is defined else 'latest' }}"
         version: "{{ ephios_version | default(omit) }}"
         executable: /usr/bin/pip3.8
         extra_args: --user
