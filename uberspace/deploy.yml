@@ -115,6 +115,9 @@
         src: "files/ephios.env.j2"
         dest: "~/ephios.env"
 
+    - name: migrate user_management to core
+      shell: source ~/ephios.env && python3.8 -m ephios dbshell -- -e "update django_migrations set app='core' where app='user_management';"
+
     - name: django migrate
       shell: source ~/ephios.env && python3.8 -m ephios migrate
       notify:
