@@ -99,6 +99,29 @@
           path: ~/uwsgi/out.log
           state: touch
 
+    - name: install and set up redis cache
+      block:
+      - name: create redis directory
+        file:
+          path: ~/.redis/
+          state: directory
+      - name: copy redis conf
+        template:
+          src: "files/redis.conf.j2"
+          dest: "~/.redis/conf"
+      - name: copy redis ini
+        template:
+          src: "files/redis.ini.j2"
+          dest: "~/etc/services.d/redis.ini"
+      - name: reread supervisorctl
+        supervisorctl:
+          name: redis
+          state: present
+      - name: restart redis
+        supervisorctl:
+          name: redis
+          state: restarted
+
     - name: install ephios
       pip:
         name: "{{ package_name }}"

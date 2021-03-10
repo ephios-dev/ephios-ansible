@@ -32,5 +32,6 @@ env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ domain }}:{{ smtp_password }}@{
 env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ domain }}
 env = SERVER_EMAIL={{ smtp_mailbox}}@{{ domain }}
 
-env = ADMINS={{ admin_email }}
+env = ADMINS="{{ admin_email }}"
 
+env = CACHE_URL=redis:///home/{{ ansible_user }}/.redis/sock
