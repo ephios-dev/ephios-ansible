@@ -109,18 +109,17 @@
         template:
           src: "files/redis.conf.j2"
           dest: "~/.redis/conf"
+        notify:
+        - reread supervisorctl
+        - restart redis
       - name: copy redis ini
         template:
           src: "files/redis.ini.j2"
           dest: "~/etc/services.d/redis.ini"
-      - name: reread supervisorctl
-        supervisorctl:
-          name: redis
-          state: present
-      - name: restart redis
-        supervisorctl:
-          name: redis
-          state: restarted
+        notify:
+          - reread supervisorctl
+          - restart redis
+
 
     - name: install ephios
       pip:
@@ -167,4 +166,12 @@
     - name: restart uwsgi
       supervisorctl:
         name: uwsgi
+        state: restarted
+    - name: reread supervisorctl
+      supervisorctl:
+        name: redis
+        state: present
+    - name: restart redis
+      supervisorctl:
+        name: redis
         state: restarted
