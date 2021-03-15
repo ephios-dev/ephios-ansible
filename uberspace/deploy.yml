@@ -131,6 +131,11 @@
       notify:
       - restart uwsgi
 
+    - name: Create vapid keys
+      shell: "~/.local/bin/vapid --gen"
+      args:
+        chdir: "~/"
+        creates: "private_key.pem"
 
     - name: copy ephios env
       template:

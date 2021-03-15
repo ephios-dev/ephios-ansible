@@ -35,3 +35,5 @@ env = SERVER_EMAIL={{ smtp_mailbox}}@{{ domain }}
 env = ADMINS="{{ admin_email }}"
 
 env = CACHE_URL=redis:///home/{{ ansible_user }}/.redis/sock
+
+env = VAPID_PRIVATE_KEY_PATH=/home/{{ ansible_user }}/private_key.pem
