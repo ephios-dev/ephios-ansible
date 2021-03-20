@@ -172,6 +172,9 @@
         minute: "*/15"
         job: "source ~/ephios.env && python3.8 -m ephios run_periodic"
 
+    - cronvar:
+        name: MAILTO
+        value: ""
 
   handlers:
     - name: restart uwsgi
