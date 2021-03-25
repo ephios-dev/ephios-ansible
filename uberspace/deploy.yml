@@ -131,6 +131,14 @@
       notify:
       - restart uwsgi
 
+    - name: install plugins
+      pip:
+        name: "{{ plugins | join(' ') }}"
+        state: "latest"
+        executable: /usr/bin/pip3.8
+        extra_args: --user
+      when: plugins is defined
+
     - name: Create vapid keys
       shell: "~/.local/bin/vapid --gen"
       args:
