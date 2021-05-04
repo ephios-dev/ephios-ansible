@@ -8,7 +8,7 @@
 
 To use the playbook:
 
-1. Copy `hosts.example` to `hosts` and change hostname, username, additional url that ephios will be served from and the ssh key to authenticate.
-2. Have a look at `deploy.yml` and other files and change configuration as needed.
-3. Run the playbook, e.g.: `ansible-playbook deploy.yml -i hosts -v`
+1. Copy `hosts.example` to `hosts` and change hostname, username, additional url that ephios will be served from and the ssh key to authenticate (if ssh doesn't know about the key alread).
+2. Have a look at `provision.yml` and other files and change configuration as needed.
+3. Run the playbook, e.g.: `ansible-playbook provision.yml -i hosts -v`
 

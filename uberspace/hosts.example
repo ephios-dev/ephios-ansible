@@ -1,8 +1,9 @@
 ---
-servers:
+uberspace_instances:
   hosts:
-    thishostdoesnotexist.uberspace.de:
+    a_descriptive_instance_name:
       ansible_user: theuberspaceusername
+      ansible_host: thehost.uberspace.de
       domain: asubdomain.ephios.de
       ansible_ssh_private_key_file: ~/path/to/ssh/key
       smtp_mailbox: noreply

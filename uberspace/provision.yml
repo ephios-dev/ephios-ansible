@@ -1,0 +1,9 @@
+---
+- name: Install ephios on an uberspace account
+  hosts: uberspace_instances
+  strategy: free
+  vars:
+    package_name: ephios[mysql,redis]
+  gather_facts: false
+  roles:
+    - uberspace_ephios

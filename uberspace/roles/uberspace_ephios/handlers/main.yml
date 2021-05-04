@@ -1,0 +1,13 @@
+---
+- name: restart uwsgi
+  supervisorctl:
+    name: uwsgi
+    state: restarted
+- name: reread supervisorctl
+  supervisorctl:
+    name: redis
+    state: present
+- name: restart redis
+  supervisorctl:
+    name: redis
+    state: restarted
