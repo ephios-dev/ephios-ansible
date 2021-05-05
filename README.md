@@ -12,3 +12,4 @@ To use the playbook:
 2. Have a look at `provision.yml` and other files and change configuration as needed.
 3. Run the playbook, e.g.: `ansible-playbook provision.yml -i hosts -v`
 
+We recommend setting `ANSIBLE_PIPELINING=True` to speed up the playbook run.
