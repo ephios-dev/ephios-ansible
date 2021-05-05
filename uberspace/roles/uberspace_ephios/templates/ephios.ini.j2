@@ -27,7 +27,7 @@ env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ domain }}/media/
 
 env = SITE_URL=https://{{ domain }}
 
-env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ domain }}:{{ smtp_password }}@{{ inventory_hostname }}:587
+env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ domain }}:{{ smtp_password }}@{{ ansible_host }}:587
 
 env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ domain }}
 env = SERVER_EMAIL={{ smtp_mailbox}}@{{ domain }}
