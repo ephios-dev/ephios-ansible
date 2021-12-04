@@ -2,11 +2,27 @@
 uberspace_instances:
   hosts:
     a_descriptive_instance_name:
+      use_main_documentroot: false
       ansible_user: theuberspaceusername
       ansible_host: thehost.uberspace.de
       domain: asubdomain.ephios.de
+      database_driver: mysql
       ansible_ssh_private_key_file: ~/path/to/ssh/key
       smtp_mailbox: noreply
       admin_email: admin@ephios.de
+      plugins:
+        - example_plugin
+    a_main_documentroot_instance:
+      use_main_documentroot: true
+      ansible_user: theuberspaceusername
+      ansible_host: thehost.uberspace.de
+      ansible_ssh_private_key_file: ~/path/to/ssh/key
+      smtp_mailbox: noreply
+      smtp_domain: ephios.de
+      admin_email: admin@ephios.de
+      database_driver: psql
+      domains:
+        - asubdomain.ephios.de
+        - anothersubdomain.ephios.de
       plugins:
         - example_plugin

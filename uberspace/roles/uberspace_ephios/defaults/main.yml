@@ -1,0 +1,3 @@
+---
+use_main_documentroot: false
+database_driver: mysql

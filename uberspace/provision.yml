@@ -3,7 +3,7 @@
   hosts: uberspace_instances
   strategy: free
   vars:
-    package_name: ephios[mysql,redis]
+    package_name: ephios[mysql,pgsql,redis]
   gather_facts: false
   roles:
     - uberspace_ephios
