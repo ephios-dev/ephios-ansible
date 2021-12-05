@@ -15,4 +15,4 @@
 
 - name: set database url
   set_fact:
-    db_url: "mysql://{{ ansible_user }}:{{ db_password }}@localhost/{{ ansible_user }}_ephios"
+    database_url: "mysql://{{ ansible_user }}:{{ db_password }}@localhost/{{ ansible_user }}_ephios"
