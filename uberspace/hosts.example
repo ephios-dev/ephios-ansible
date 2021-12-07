@@ -19,10 +19,12 @@ uberspace_instances:
       ansible_ssh_private_key_file: ~/path/to/ssh/key
       smtp_mailbox: noreply
       smtp_domain: ephios.de
+      smtp_host: smtp.ephios.de
+      smtp_password: thepassword
       admin_email: admin@ephios.de
       database_driver: psql
-      domains:
-        - asubdomain.ephios.de
-        - anothersubdomain.ephios.de
+      custom_settings_module: django_app.settings
+      custom_allowed_hosts:
+        - .example.com
       plugins:
         - example_plugin
