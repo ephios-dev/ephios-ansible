@@ -1,3 +1,5 @@
 ---
 use_main_documentroot: false
 database_driver: mysql
+smtp_host: "{{ ansible_host }}"
+smtp_domain: "{{ domain }}"

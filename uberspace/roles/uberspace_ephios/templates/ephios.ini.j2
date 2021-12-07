@@ -14,13 +14,16 @@ plugin = python
 uid = {{ ansible_user }}
 gid = {{ ansible_user }}
 
+{% if custom_settings_module is defined %}
+env = DJANGO_SETTINGS_MODULE={{ custom_settings_module }}
+{% endif %}
 
 env = SECRET_KEY={{ django_secret }}
 env = DEBUG=False
 
 env = DATABASE_URL={{ database_url }}
 
-env = ALLOWED_HOSTS={{ domains|join(",") if use_main_documentroot else domain }}
+env = ALLOWED_HOSTS={{ custom_allowed_hosts|join(",") if custom_allowed_hosts is defined else domain }}
 env = STATIC_URL=/static/
 env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_documentroot else domain }}/static/
 env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_documentroot else domain }}/static/
@@ -29,10 +32,10 @@ env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_docu
 env = SITE_URL=https://{{ domain }}
 {% endif %}
 
-env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ smtp_domain if use_main_documentroot else domain }}:{{ smtp_password }}@{{ ansible_host }}:587
+env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ smtp_domain }}:{{ smtp_password }}@{{ smtp_host }}:587
 
-env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ smtp_domain if use_main_documentroot else domain }}
-env = SERVER_EMAIL={{ smtp_mailbox}}@{{ smtp_domain if use_main_documentroot else domain }}
+env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ smtp_domain }}
+env = SERVER_EMAIL={{ smtp_mailbox}}@{{ smtp_domain }}
 
 env = ADMINS="{{ admin_email }}"
 

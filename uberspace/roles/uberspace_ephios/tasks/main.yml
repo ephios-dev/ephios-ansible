@@ -22,13 +22,14 @@
     - name: Set smtp_password as fact
       set_fact:
         smtp_password: "{{ cmd_output.stdout }}"
+      when: smtp_password is undefined
 
+- name: uberspace add web domain
+  shell: uberspace web domain add {{ domain }}
+  ignore_errors: yes  # if domain is added already, there is a non-zero exit code
 
-- name: set up uberspace web for separate domain
+- name: set up web backends for separate documentroot
   block:
-    - name: uberspace add web domain
-      shell: uberspace web domain add {{ domain }}
-      ignore_errors: yes  # if domain is added already, there is a non-zero exit code
     - name: uberspace set application web backend
       shell: uberspace web backend set {{ domain }}/ --http --port 8000
     - name: uberspace set static web backend
@@ -38,12 +39,8 @@
       shell: uberspace web backend set {{ domain }}/media/ --apache
   when: not use_main_documentroot
 
-- name: set up uberspace web for all domains
+- name: set up web backends for main documentroot
   block:
-    - name: uberspace add web domain
-      shell: uberspace web domain add {{ item }}
-      ignore_errors: yes  # if domain is added already, there is a non-zero exit code
-      loop: "{{ domains }}"
     - name: uberspace set application web backend
       shell: uberspace web backend set / --http --port 8000
     - name: uberspace set static web backend
@@ -64,6 +61,7 @@
       ignore_errors: yes  # if user is added already, there is a non-zero exit code
     - name: uberspace set mail password
       shell: "uberspace mail user password {{ smtp_mailbox }} -p\"{{ smtp_password }}\""
+  when: smtp_host == ansible_host
 
 - name: setup mysql
   include: mysql.yml
