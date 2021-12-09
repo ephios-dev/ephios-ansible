@@ -14,23 +14,28 @@ plugin = python
 uid = {{ ansible_user }}
 gid = {{ ansible_user }}
 
+{% if custom_settings_module is defined %}
+env = DJANGO_SETTINGS_MODULE={{ custom_settings_module }}
+{% endif %}
 
 env = SECRET_KEY={{ django_secret }}
 env = DEBUG=False
 
-env = DATABASE_URL=mysql://{{ ansible_user }}:{{ db_password }}@localhost/{{ ansible_user }}_ephios
+env = DATABASE_URL={{ database_url }}
 
-env = ALLOWED_HOSTS={{ domain }}
+env = ALLOWED_HOSTS={{ custom_allowed_hosts|join(",") if custom_allowed_hosts is defined else domain }}
 env = STATIC_URL=/static/
-env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ domain }}/static/
-env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ domain }}/media/
+env = STATIC_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_documentroot else domain }}/static/
+env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_documentroot else domain }}/media/
 
+{% if not use_main_documentroot %}
 env = SITE_URL=https://{{ domain }}
+{% endif %}
 
-env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ domain }}:{{ smtp_password }}@{{ ansible_host }}:587
+env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ smtp_domain }}:{{ smtp_password }}@{{ smtp_host }}:587
 
-env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ domain }}
-env = SERVER_EMAIL={{ smtp_mailbox}}@{{ domain }}
+env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ smtp_domain }}
+env = SERVER_EMAIL={{ smtp_mailbox}}@{{ smtp_domain }}
 
 env = ADMINS="{{ admin_email }}"
 
