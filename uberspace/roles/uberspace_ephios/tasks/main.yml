@@ -132,7 +132,7 @@
 
 - name: install plugins
   pip:
-    name: "{{ plugins | join(' ') }}"
+    name: "{{ plugins }}"
     state: "latest"
     executable: /usr/bin/pip3.8
     extra_args: --user
