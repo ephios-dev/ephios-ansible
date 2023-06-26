@@ -32,7 +32,7 @@ env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_docum
 env = SITE_URL=https://{{ domain }}
 {% endif %}
 
-env = EMAIL_URL=smtp+tls://{{ smtp_mailbox }}@{{ smtp_domain }}:{{ smtp_password }}@{{ smtp_host }}:587
+env = EMAIL_URL=smtp+tls://apikey:{{ smtp_password }}@smtp.sendgrid.net:587
 
 env = DEFAULT_FROM_EMAIL={{ smtp_mailbox }}@{{ smtp_domain }}
 env = SERVER_EMAIL={{ smtp_mailbox}}@{{ smtp_domain }}
