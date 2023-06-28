@@ -32,7 +32,7 @@ env = MEDIA_ROOT=/var/www/virtual/{{ ansible_user }}/{{ "html" if use_main_docum
 env = SITE_URL=https://{{ domain }}
 {% endif %}
 
-env = EMAIL_URL=smtp+tls://{{ smtp_user }}:{{ smtp_password }}@{{ smtp_host }}:587
+env = EMAIL_URL=smtp+ssl://{{ smtp_user }}:{{ smtp_password }}@{{ smtp_host }}:465
 
 env = DEFAULT_FROM_EMAIL={{ smtp_from }}
 env = SERVER_EMAIL={{ smtp_from }}
