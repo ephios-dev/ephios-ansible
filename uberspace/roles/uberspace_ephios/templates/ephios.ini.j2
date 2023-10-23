@@ -18,7 +18,6 @@ gid = {{ ansible_user }}
 env = DJANGO_SETTINGS_MODULE={{ custom_settings_module }}
 {% endif %}
 
-env = SECRET_KEY={{ django_secret }}
 env = DEBUG=False
 
 env = DATABASE_URL={{ database_url }}
@@ -41,4 +40,4 @@ env = ADMINS="{{ admin_email }}"
 
 env = CACHE_URL=redis:///home/{{ ansible_user }}/.redis/sock
 
-env = VAPID_PRIVATE_KEY_PATH=/home/{{ ansible_user }}/private_key.pem
+env = DATA_DIR=/home/{{ ansible_user }}/var/ephios/data

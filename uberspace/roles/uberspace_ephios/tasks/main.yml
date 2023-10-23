@@ -2,16 +2,6 @@
 - name: create secrets and set them as fact
   no_log: true
   block:
-    - name: create django_secret file
-      shell: "openssl rand -base64 50 | tr -cd '[:alnum:]' > ~/.django-secret"
-      args:
-        creates: "~/.django-secret"
-    - name: Read django_secret
-      shell: "cat ~/.django-secret"
-      register: cmd_output
-    - name: Set django_secret as fact
-      set_fact:
-        django_secret: "{{ cmd_output.stdout }}"
     - name: create smtp_password file
       shell: "openssl rand -base64 30 | tr -cd '[:alnum:]' > ~/.smtp-password"
       args:
