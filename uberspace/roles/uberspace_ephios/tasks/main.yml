@@ -54,11 +54,11 @@
   when: smtp_host == ansible_host
 
 - name: setup mysql
-  include: mysql.yml
+  include_tasks: mysql.yml
   when: database_driver == "mysql"
 
 - name: setup postgresql
-  include: postgres.yml
+  include_tasks: postgres.yml
   when: database_driver == "postgres"
 
 - name: install and set up uwsgi
