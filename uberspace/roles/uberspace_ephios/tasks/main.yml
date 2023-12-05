@@ -67,7 +67,7 @@
       pip:
         name: uwsgi
         state: latest
-        executable: /usr/bin/pip3.8
+        executable: /usr/bin/pip3.11
         extra_args: --user
       notify:
         - restart uwsgi
@@ -115,7 +115,7 @@
     name: "{{ package_name }}"
     state: "{{ 'present' if ephios_version is defined else 'latest' }}"
     version: "{{ ephios_version | default(omit) }}"
-    executable: /usr/bin/pip3.8
+    executable: /usr/bin/pip3.11
     extra_args: --user
   notify:
     - restart uwsgi
@@ -124,7 +124,7 @@
   pip:
     name: "{{ plugins }}"
     state: "latest"
-    executable: /usr/bin/pip3.8
+    executable: /usr/bin/pip3.11
     extra_args: --user
   when: plugins is defined
 
@@ -140,20 +140,20 @@
     dest: "~/ephios.env"
 
 - name: django migrate
-  shell: source ~/ephios.env && python3.8 -m ephios migrate
+  shell: source ~/ephios.env && python3.11 -m ephios migrate
   notify:
     - restart uwsgi
 
 - name: django collectstatic
-  shell: source ~/ephios.env && python3.8 -m ephios collectstatic --no-input
+  shell: source ~/ephios.env && python3.11 -m ephios collectstatic --no-input
 
 - name: django compilemessages
-  shell: source ~/ephios.env && python3.8 -m ephios compilemessages
+  shell: source ~/ephios.env && python3.11 -m ephios compilemessages
   notify:
     - restart uwsgi
 
 - name: django compile i18n javascript
-  shell: source ~/ephios.env && python3.8 -m ephios compilejsi18n
+  shell: source ~/ephios.env && python3.11 -m ephios compilejsi18n
 
 
 - name: copy ephios uwsgi config
@@ -167,7 +167,7 @@
   cron:
     name: "ephios periodic runner"
     minute: "*/15"
-    job: "source ~/ephios.env && python3.8 -m ephios run_periodic"
+    job: "source ~/ephios.env && python3.11 -m ephios run_periodic"
 
 - cronvar:
     name: MAILTO
