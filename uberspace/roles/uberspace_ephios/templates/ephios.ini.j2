@@ -42,5 +42,5 @@ env = ADMINS="{{ admin_email }}"
 env = CACHE_URL=redis:///home/{{ ansible_user }}/.redis/sock
 
 env = DATA_DIR=/home/{{ ansible_user }}/var/ephios/data
-
+env = VAPID_PRIVATE_KEY_PATH=/home/{{ ansible_user }}/private_key.pem
 env = FALLBACK_MEDIA_SERVING=True
