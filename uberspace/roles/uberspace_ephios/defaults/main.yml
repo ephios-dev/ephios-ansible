@@ -3,3 +3,6 @@ use_main_documentroot: false
 database_driver: mysql
 smtp_host: "{{ ansible_host }}"
 smtp_domain: "{{ domain }}"
+python_version: "3.14"
+python_executable: "/usr/bin/python{{ python_version }}"
+pip_executable: "/usr/bin/pip"

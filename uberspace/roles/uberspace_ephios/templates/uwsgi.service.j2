@@ -1,0 +1,16 @@
+[Unit]
+Description=uwsgi emperor for ephios
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/uwsgi --master --emperor %h/uwsgi/apps-enabled
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/uwsgi/out.log
+StandardError=append:%h/uwsgi/err.log
+
+[Install]
+WantedBy=default.target
