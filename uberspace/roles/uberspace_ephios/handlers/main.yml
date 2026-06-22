@@ -1,13 +1,17 @@
 ---
+- name: reload systemd user daemon
+  systemd:
+    daemon_reload: yes
+    scope: user
+
 - name: restart uwsgi
-  supervisorctl:
+  systemd:
     name: uwsgi
     state: restarted
-- name: reread supervisorctl
-  supervisorctl:
-    name: redis
-    state: present
+    scope: user
+
 - name: restart redis
-  supervisorctl:
+  systemd:
     name: redis
     state: restarted
+    scope: user

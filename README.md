@@ -4,7 +4,7 @@
 
 ## Uberspace
 
-[Uberspace](https://uberspace.de/) is a shared hosting service. In `uberspace` there is an ansible playbook to provision ephios on an uberspace that you have registered before. The playbook expects an unmodified uberspace 7 without other applications running on it.
+[Uberspace](https://uberspace.de/) is a shared hosting service. In `uberspace` there is an ansible playbook to provision ephios on an uberspace that you have registered before. The playbook expects an unmodified uberspace 8 without other applications running on it.
 
 To use the playbook:
 

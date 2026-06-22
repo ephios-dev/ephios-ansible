@@ -1,0 +1,8 @@
+[Unit]
+Description=ephios periodic runner
+After=network.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/ephios.env
+ExecStart={{ python_executable }} -m ephios run_periodic

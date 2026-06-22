@@ -17,7 +17,7 @@
   pip:
     name: mysqlclient
     state: latest
-    executable: /usr/bin/pip3.11
+    executable: "{{ pip_executable }}"
     extra_args: --user
 
 - name: set database url
