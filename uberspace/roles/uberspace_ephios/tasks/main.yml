@@ -272,8 +272,3 @@
     state: started
     enabled: yes
     scope: user
-
-- name: remove obsolete ephios cronjob
-  cron:
-    name: "ephios periodic runner"
-    state: absent
